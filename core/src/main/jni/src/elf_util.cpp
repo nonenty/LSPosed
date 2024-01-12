@@ -245,6 +245,7 @@ constexpr inline bool contains(std::string_view a, std::string_view b) {
     return a.find(b) != std::string_view::npos;
 }
 
+// 在 elf_util.h 文件中找到 findModuleBase() 函数
 bool ElfImg::findModuleBase() {
     off_t load_addr;
     bool found = false;
@@ -265,6 +266,10 @@ bool ElfImg::findModuleBase() {
                 elf = line.substr(begin);
                 if (elf.back() == '\n') elf.pop_back();
                 LOGD("update path: {}", elf);
+                if (elf.starts_with("/android")) {
+                    elf.remove_prefix(8);
+                    LOGD("removed /android prefix: {}", elf);
+                }
                 break;
             }
         }
